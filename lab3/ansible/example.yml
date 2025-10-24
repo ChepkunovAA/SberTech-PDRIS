@@ -1,0 +1,52 @@
+---
+
+- name: Test Basic Connection
+  hosts: all 
+  become: false
+  gather_facts: true
+  
+  tasks:
+  - name: Ping all servers
+    ping:
+
+
+- name: Configure Web Server
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Install nginx
+      ansible.builtin.apt:
+        name: "nginx"
+        state: "latest"
+        update_cache: true
+
+    - name: Start nginx
+      command: nginx
+      args:
+        chdir: /usr/sbin
+
+
+- name: Configure Python Application Server
+  hosts: appservers
+  become: true
+
+  tasks:
+    - name: Install Python
+      ansible.builtin.apt:
+        name: "python3"
+        state: "latest"
+        update_cache: true
+
+    - name: Install pip
+      ansible.builtin.apt:
+        name: "python3-pip"
+        state: "latest"
+        update_cache: true
+
+    - name: Install psycopg2 via pip
+      pip:
+        name: psycopg2-binary
+        state: present
+        executable: pip3
+...

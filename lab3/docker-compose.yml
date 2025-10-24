@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  ansible-control:
+    build: 
+      context: .
+      dockerfile: ./dockerfileUbuntuHost
+    container_name: ansible-control
+    ports:
+      - "4444:22"
+    volumes:
+      - ./ansible:/home/admin/ansible
+    working_dir: /home/admin/ansible
+    tty: true
+    stdin_open: true
+    networks:
+      - ansible-network
+    
+  postgresqlhost: 
+    image: postgres:13-alpine
+    container_name: postgresqlhost
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ansible-network
+    
+  nginxhost:
+    build: 
+      context: .
+      dockerfile: ./dockerfileUbuntu
+    container_name: nginx-host
+    ports:
+      - "8080:80"
+    networks:
+      - ansible-network
+
+  pythonapp:
+    build:
+      context: .
+      dockerfile: ./dockerfileApp
+    container_name: python-app
+    ports:
+      - "5555:22"
+    environment:
+      - DB_HOST=postgresqlhost
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_PORT=5432
+    depends_on:
+      - postgresqlhost
+    networks:
+      - ansible-network
+
+volumes:
+  postgres_data:
+
+networks:
+  ansible-network:
+    driver: bridge
