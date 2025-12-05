@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+        environment {
+        NEXUS_URL = ""http://nexus:8081""
+        NEXUS_CREDENTIALS_ID = ""nexus_cred""
+        NEXUS_REPOSITORY = 'maven-releases'
+    }
+
+
+       
+    stages {
+        stage('Download from Nexus') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: NEXUS_CREDENTIALS_ID)]) {
+                        sh "curl -u -o ${APP_NAME}.jar ${NEXUS_URL}/repository/${NEXUS_REPOSITORY}/myapp.jar"
+                    }
+                }
+            }
+        }
+
+        stage('git clone'){
+            steps{
+                git branch: 'lab5-deploy', url: 'https://github.com/ChepkunovAA/SberTech-PDRIS'
+            }
+        }
+        
+        stage('Run Ansible') {
+            steps {
+                sh 'ansible-playbook ./ansible/playbook.yml'
+            }
+        }
+    }
+
+}
