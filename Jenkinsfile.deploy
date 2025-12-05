@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: NEXUS_CREDENTIALS_ID)]) {
-                        sh "curl -u -o ${APP_NAME}.jar ${NEXUS_URL}/repository/${NEXUS_REPOSITORY}/myapp.jar"
+                        sh "curl -u -o ${APP_NAME}.jar ${NEXUS_URL}/repository/${NEXUS_REPOSITORY}/myapp-1.0-SNAPSHOT.jar"
                     }
                 }
             }
