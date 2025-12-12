@@ -1,9 +1,9 @@
 pipeline {
     agent any
         environment {
-        NEXUS_URL = ""http://nexus:8081""
-        NEXUS_CREDENTIALS_ID = ""nexus_cred""
-        NEXUS_REPOSITORY = 'maven-releases'
+        NEXUS_URL = "http://nexus:8081"
+        NEXUS_CREDENTIALS_ID = "nexus_cred"
+        NEXUS_REPOSITORY = "maven-snapshots"
     }
 
 
@@ -12,9 +12,19 @@ pipeline {
         stage('Download from Nexus') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: NEXUS_CREDENTIALS_ID)]) {
-                        sh "curl -u -o ${APP_NAME}.jar ${NEXUS_URL}/repository/${NEXUS_REPOSITORY}/myapp-1.0-SNAPSHOT.jar"
-                    }
+            withCredentials([
+                usernamePassword(
+                    credentialsId: NEXUS_CREDENTIALS_ID,
+                    usernameVariable: 'NEXUS_USERNAME',
+                    passwordVariable: 'NEXUS_PASSWORD'
+                )
+            ]) {
+                sh """
+                    curl -u \${NEXUS_USERNAME}:\${NEXUS_PASSWORD} \
+                         -o myapp.jar \
+                         \${NEXUS_URL}/repository/\${NEXUS_REPOSITORY}/org/example/myapp/1.0-SNAPSHOT/myapp-1.0-SNAPSHOT.jar
+                """
+            }
                 }
             }
         }

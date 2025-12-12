@@ -1,0 +1,418 @@
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/build
+[Pipeline] {
+[Pipeline] tool
+[Pipeline] tool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Tool Install)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Environment Check)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ echo Java version:
+Java version:
++ java -version
+openjdk version "21.0.9" 2025-10-21 LTS
+OpenJDK Runtime Environment Temurin-21.0.9+10 (build 21.0.9+10-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.9+10 (build 21.0.9+10-LTS, mixed mode)
++ echo Maven version:
+Maven version:
++ mvn -version
+Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)
+Maven home: /var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/mvn
+Java version: 21.0.9, vendor: Eclipse Adoptium, runtime: /opt/java/openjdk
+Default locale: en, platform encoding: UTF-8
+OS name: "linux", version: "6.6.107-1-manjaro", arch: "amd64", family: "unix"
++ echo Current directory:
+Current directory:
++ pwd
+/var/jenkins_home/workspace/build
++ echo JAVA_HOME: /opt/java/openjdk
+JAVA_HOME: /opt/java/openjdk
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (git clone)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/build/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/ChepkunovAA/SberTech-PDRIS # timeout=10
+Fetching upstream changes from https://github.com/ChepkunovAA/SberTech-PDRIS
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/ChepkunovAA/SberTech-PDRIS +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/lab5-app^{commit} # timeout=10
+Checking out Revision 04517b326f204583de9e25caf879fe7daad348ea (refs/remotes/origin/lab5-app)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 04517b326f204583de9e25caf879fe7daad348ea # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D lab5-app # timeout=10
+ > git checkout -b lab5-app 04517b326f204583de9e25caf879fe7daad348ea # timeout=10
+Commit message: "lab5-app"
+ > git rev-list --no-walk 04517b326f204583de9e25caf879fe7daad348ea # timeout=10
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run Tests)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/build/VeryUsefulApp
+[Pipeline] {
+[Pipeline] sh
++ mvn test
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< org.example:myapp >--------------------------
+[INFO] Building myapp 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ myapp ---
+[INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/build/VeryUsefulApp/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ myapp ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ myapp ---
+[INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/build/VeryUsefulApp/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ myapp ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ myapp ---
+[WARNING]  Parameter 'systemProperties' is deprecated: Use systemPropertyVariables instead.
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+[INFO] Running org.example.DeepThoughtSolverTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.715 s -- in org.example.DeepThoughtSolverTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.303 s
+[INFO] Finished at: 2025-12-12T00:05:27Z
+[INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Generate Allure Report)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/build/VeryUsefulApp
+[Pipeline] {
+[Pipeline] allure
+[VeryUsefulApp] $ /var/jenkins_home/tools/ru.yandex.qatools.allure.jenkins.tools.AllureCommandlineInstallation/allure/bin/allure generate -c -o /var/jenkins_home/workspace/build/VeryUsefulApp/allure-report
+allure-results does not exist
+Report successfully generated to /var/jenkins_home/workspace/build/VeryUsefulApp/allure-report
+Allure report was successfully generated.
+Archiving Allure report via ArtifactManager…
+Allure artifact archived via ArtifactManager.
+Allure report copied to: /var/jenkins_home/jobs/build/builds/17/allure-report
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (SonarQube Analysis)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/build/VeryUsefulApp
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $SONAR_TOKEN
+[Pipeline] {
+[Pipeline] sh
++ mvn sonar:sonar -Dsonar.projectKey=VeryUsefulApp -Dsonar.host.url=http://sonarqube:9000 -Dsonar.token=****
+[INFO] Scanning for projects...
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml
+Progress (1): 3.5 kBProgress (1): 7.6 kBProgress (1): 12 kB Progress (1): 15 kBProgress (1): 20 kBProgress (1): 21 kBProgress (2): 21 kB | 4.1 kBProgress (2): 21 kB | 9.3 kBProgress (2): 21 kB | 14 kB                            Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-metadata.xml (14 kB at 20 kB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/maven-metadata.xml (21 kB at 27 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/sonar-maven-plugin/maven-metadata.xml
+Progress (1): 1.4 kB                    Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/mojo/sonar-maven-plugin/maven-metadata.xml (1.4 kB at 18 kB/s)
+[WARNING] The artifact org.codehaus.mojo:sonar-maven-plugin:jar:4.0.0.4121 has been relocated to org.sonarsource.scanner.maven:sonar-maven-plugin:jar:4.0.0.4121: SonarQube plugin was moved to SonarSource organisation
+[INFO] 
+[INFO] -------------------------< org.example:myapp >--------------------------
+[INFO] Building myapp 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- sonar:4.0.0.4121:sonar (default-cli) @ myapp ---
+[WARNING] 00:05:35.417 Using an unspecified version instead of an explicit plugin version may introduce breaking analysis changes at an unwanted time. It is highly recommended to use an explicit version, e.g. 'org.sonarsource.scanner.maven:sonar-maven-plugin:4.0.0.4121'.
+[INFO] 00:05:35.430 Java 21.0.9 Eclipse Adoptium (64-bit)
+[INFO] 00:05:35.430 Linux 6.6.107-1-MANJARO (amd64)
+[INFO] 00:05:35.483 User cache: /var/jenkins_home/.sonar/cache
+[INFO] 00:05:35.557 Communicating with SonarQube Server 25.11.0.114957
+[INFO] 00:05:35.577 Default locale: "en", source code encoding: "UTF-8"
+[INFO] 00:05:36.698 Load global settings
+[INFO] 00:05:36.887 Load global settings (done) | time=191ms
+[INFO] 00:05:36.908 Server id: AA2DD71C-AZsPIuce93TpS_mQLTtk
+[INFO] 00:05:36.924 Loading required plugins
+[INFO] 00:05:36.925 Load plugins index
+[INFO] 00:05:37.004 Load plugins index (done) | time=79ms
+[INFO] 00:05:37.005 Load/download plugins
+[INFO] 00:05:37.028 Load/download plugins (done) | time=23ms
+[INFO] 00:05:37.466 Process project properties
+[INFO] 00:05:37.486 Process project properties (done) | time=20ms
+[INFO] 00:05:37.503 Project key: VeryUsefulApp
+[INFO] 00:05:37.503 Base dir: /var/jenkins_home/workspace/build/VeryUsefulApp
+[INFO] 00:05:37.504 Working dir: /var/jenkins_home/workspace/build/VeryUsefulApp/target/sonar
+[INFO] 00:05:37.516 Load project settings for component key: 'VeryUsefulApp'
+[INFO] 00:05:37.576 Load project settings for component key: 'VeryUsefulApp' (done) | time=60ms
+[INFO] 00:05:37.608 Load quality profiles
+[INFO] 00:05:37.765 Load quality profiles (done) | time=157ms
+[INFO] 00:05:37.781 Auto-configuring with CI 'Jenkins'
+[INFO] 00:05:37.826 Load active rules
+[INFO] 00:05:38.514 Load active rules (done) | time=688ms
+[INFO] 00:05:38.524 Load analysis cache
+[INFO] 00:05:38.608 Load analysis cache (297 bytes) | time=84ms
+[INFO] 00:05:38.690 Preprocessing files...
+[INFO] 00:05:38.805 2 languages detected in 5 preprocessed files (done) | time=114ms
+[INFO] 00:05:38.805 0 files ignored because of scm ignore settings
+[INFO] 00:05:38.807 Loading plugins for detected languages
+[INFO] 00:05:38.808 Load/download plugins
+[INFO] 00:05:38.818 Load/download plugins (done) | time=10ms
+[INFO] 00:05:38.953 Load project repositories
+[INFO] 00:05:39.126 Load project repositories (done) | time=173ms
+[INFO] 00:05:39.148 Indexing files...
+[INFO] 00:05:39.148 Project configuration:
+[INFO] 00:05:39.157 5 files indexed (done) | time=8ms
+[INFO] 00:05:39.158 Quality profile for java: Sonar way
+[INFO] 00:05:39.158 Quality profile for xml: Sonar way
+[INFO] 00:05:39.158 ------------- Run sensors on module myapp
+[INFO] 00:05:39.216 Load metrics repository
+[INFO] 00:05:39.239 Load metrics repository (done) | time=23ms
+[INFO] 00:05:39.862 Sensor JavaSensor [java]
+[INFO] 00:05:39.866 Configured Java source version (sonar.java.source): 17, preview features enabled (sonar.java.enablePreview): false
+[INFO] 00:05:39.884 Server-side caching is enabled. The Java analyzer will not try to leverage data from a previous analysis.
+[INFO] 00:05:39.886 Using ECJ batch to parse 3 Main java source files with batch size 201 KB.
+[INFO] 00:05:40.162 Starting batch processing.
+[INFO] 00:05:40.504 The Java analyzer cannot skip unchanged files in this context. A full analysis is performed for all files.
+[INFO] 00:05:41.018 100% analyzed
+[INFO] 00:05:41.019 Batch processing: Done.
+[INFO] 00:05:41.019 Did not optimize analysis for any files, performed a full analysis for all 3 files.
+[INFO] 00:05:41.022 Using ECJ batch to parse 1 Test java source files with batch size 201 KB.
+[INFO] 00:05:41.026 Starting batch processing.
+[INFO] 00:05:41.103 100% analyzed
+[INFO] 00:05:41.104 Batch processing: Done.
+[INFO] 00:05:41.104 Did not optimize analysis for any files, performed a full analysis for all 1 files.
+[INFO] 00:05:41.104 No "Generated" source files to scan.
+[INFO] 00:05:41.105 Sensor JavaSensor [java] (done) | time=1244ms
+[INFO] 00:05:41.105 Sensor SurefireSensor [java]
+[INFO] 00:05:41.107 parsing [/var/jenkins_home/workspace/build/VeryUsefulApp/target/surefire-reports]
+[INFO] 00:05:41.194 Sensor SurefireSensor [java] (done) | time=89ms
+[INFO] 00:05:41.194 Sensor XML Sensor [xml]
+[INFO] 00:05:41.199 1 source file to be analyzed
+[INFO] 00:05:41.335 1/1 source file has been analyzed
+[INFO] 00:05:41.335 Sensor XML Sensor [xml] (done) | time=141ms
+[INFO] 00:05:41.335 Sensor JaCoCo XML Report Importer [jacoco]
+[INFO] 00:05:41.336 'sonar.coverage.jacoco.xmlReportPaths' is not defined. Using default locations: target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml,build/reports/jacoco/test/jacocoTestReport.xml
+[INFO] 00:05:41.337 No report imported, no coverage information will be imported by JaCoCo XML Report Importer
+[INFO] 00:05:41.337 Sensor JaCoCo XML Report Importer [jacoco] (done) | time=2ms
+[INFO] 00:05:41.337 Sensor IaC Docker Sensor [iac]
+[INFO] 00:05:41.338 There are no files to be analyzed for the Docker language
+[INFO] 00:05:41.338 Sensor IaC Docker Sensor [iac] (done) | time=1ms
+[INFO] 00:05:41.338 Sensor IaC hadolint report Sensor [iac]
+[INFO] 00:05:41.339 Sensor IaC hadolint report Sensor [iac] (done) | time=1ms
+[INFO] 00:05:41.340 Sensor Java Config Sensor [iac]
+[INFO] 00:05:41.345 There are no files to be analyzed for the Java language
+[INFO] 00:05:41.345 Sensor Java Config Sensor [iac] (done) | time=5ms
+[INFO] 00:05:41.345 Sensor TextAndSecretsSensor [text]
+[INFO] 00:05:41.356 Available processors: 16
+[INFO] 00:05:41.356 Using 16 threads for analysis.
+[INFO] 00:05:41.724 Start fetching files for the text and secrets analysis
+[INFO] 00:05:41.732 Using Git CLI to retrieve untracked files
+[INFO] 00:05:41.740 Retrieving language associated files and files included via "sonar.text.inclusions" that are tracked by git
+[INFO] 00:05:41.740 Starting the text and secrets analysis
+[INFO] 00:05:41.743 5 source files to be analyzed for the text and secrets analysis
+[INFO] 00:05:41.752 5/5 source files have been analyzed for the text and secrets analysis
+[INFO] 00:05:41.754 Sensor TextAndSecretsSensor [text] (done) | time=409ms
+[INFO] 00:05:41.757 ------------- Run sensors on project
+[INFO] 00:05:41.896 Sensor JavaProjectSensor [java]
+[INFO] 00:05:41.899 Sensor JavaProjectSensor [java] (done) | time=3ms
+[INFO] 00:05:41.900 Sensor Zero Coverage Sensor
+[INFO] 00:05:41.907 Sensor Zero Coverage Sensor (done) | time=7ms
+[INFO] 00:05:41.907 Sensor Java CPD Block Indexer
+[INFO] 00:05:41.918 Sensor Java CPD Block Indexer (done) | time=11ms
+[INFO] 00:05:41.918 ------------- Gather SCA dependencies on project
+[INFO] 00:05:41.923 Dependency analysis skipped
+[INFO] 00:05:41.931 CPD Executor 2 files had no CPD blocks
+[INFO] 00:05:41.931 CPD Executor Calculating CPD for 1 file
+[INFO] 00:05:41.936 CPD Executor CPD calculation finished (done) | time=5ms
+[INFO] 00:05:41.944 SCM revision ID '04517b326f204583de9e25caf879fe7daad348ea'
+[INFO] 00:05:42.017 Analysis report generated in 71ms, dir size=273.7 kB
+[INFO] 00:05:42.042 Analysis report compressed in 25ms, zip size=36.8 kB
+[INFO] 00:05:42.076 Analysis report uploaded in 33ms
+[INFO] 00:05:42.078 ANALYSIS SUCCESSFUL, you can find the results at: http://sonarqube:9000/dashboard?id=VeryUsefulApp
+[INFO] 00:05:42.079 Note that you will be able to access the updated dashboard once the server has processed the submitted analysis report
+[INFO] 00:05:42.079 More about the report processing at http://sonarqube:9000/api/ce/task?id=f426c199-73b9-4c8d-af44-eafb172ba6ea
+[INFO] 00:05:42.089 Analysis total time: 5.006 s
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  8.579 s
+[INFO] Finished at: 2025-12-12T00:05:42Z
+[INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Publish to Nexus)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/build/VeryUsefulApp
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ mvn package
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< org.example:myapp >--------------------------
+[INFO] Building myapp 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ myapp ---
+[INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/build/VeryUsefulApp/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ myapp ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ myapp ---
+[INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/build/VeryUsefulApp/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ myapp ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ myapp ---
+[WARNING]  Parameter 'systemProperties' is deprecated: Use systemPropertyVariables instead.
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+[INFO] Running org.example.DeepThoughtSolverTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.662 s -- in org.example.DeepThoughtSolverTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.1:jar (default-jar) @ myapp ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.600 s
+[INFO] Finished at: 2025-12-12T00:05:50Z
+[INFO] ------------------------------------------------------------------------
+[Pipeline] sh
++ ls target/myapp-1.0-SNAPSHOT.jar
+target/myapp-1.0-SNAPSHOT.jar
+[Pipeline] nexusArtifactUploader
+Uploading artifact myapp-1.0-SNAPSHOT.jar started....
+GroupId: org.example
+ArtifactId: myapp
+Classifier: 
+Type: jar
+Version: 1.0-SNAPSHOT
+File: myapp-1.0-SNAPSHOT.jar
+Repository:maven-snapshots
+Downloading: http://nexus:8081/repository/maven-snapshots/org/example/myapp/1.0-SNAPSHOT/maven-metadata.xml
+100 % completed (589 B / 589 B).
+Downloaded: http://nexus:8081/repository/maven-snapshots/org/example/myapp/1.0-SNAPSHOT/maven-metadata.xml (589 B at 2.1 kB/s)
+Uploading: http://nexus:8081/repository/maven-snapshots/org/example/myapp/1.0-SNAPSHOT/myapp-1.0-20251212.000551-2.jar
+Uploaded: http://nexus:8081/repository/maven-snapshots/org/example/myapp/1.0-SNAPSHOT/myapp-1.0-20251212.000551-2.jar (4.4 kB at 26 kB/s)
+Uploading: http://nexus:8081/repository/maven-snapshots/org/example/myapp/1.0-SNAPSHOT/maven-metadata.xml
+Uploaded: http://nexus:8081/repository/maven-snapshots/org/example/myapp/1.0-SNAPSHOT/maven-metadata.xml (589 B at 4.8 kB/s)
+Uploading artifact myapp-1.0-SNAPSHOT.jar completed.
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

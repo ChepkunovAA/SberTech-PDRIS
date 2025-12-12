@@ -10,10 +10,10 @@ pipeline {
         JAVA_HOME = "${tool 'jdk17'}"
         PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
 
-        NEXUS_URL = "http://nexus:8081"
+        NEXUS_URL = "nexus:8081"
         NEXUS_CREDENTIALS_ID = "nexus_cred"
         NEXUS_PROTOCOL = "http"
-        NEXUS_REPOSITORY = 'maven-releases'
+        NEXUS_REPOSITORY = 'maven-snapshots'
         NEXUS_VERSION = "nexus3"
 
         SONAR_HOST = "http://sonarqube:9000"
@@ -40,7 +40,7 @@ pipeline {
                 git branch: 'lab5-app', url: 'https://github.com/ChepkunovAA/SberTech-PDRIS'
             }
         }
-        
+
         stage('Run Tests') {
             steps {
                 dir('VeryUsefulApp') {
@@ -76,36 +76,25 @@ pipeline {
             }
         }
 
+
         stage("Publish to Nexus") {
             steps {
                 dir('VeryUsefulApp') {
                     script {
                         sh 'mvn package'
-                        
-                        pom = readMavenPom file: "pom.xml";
-
-                        filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
-                        
-                        artifactPath = filesByGlob[0].path;
-
-                        artifactExists = fileExists artifactPath;
-	
-                        if(artifactExists) {
-                            nexusArtifactUploader(
-                                nexusVersion: NEXUS_VERSION,
-                                protocol: NEXUS_PROTOCOL,
-                                nexusUrl: NEXUS_URL,
-                                groupId: pom.groupId,
-                                version: pom.version,
-                                repository: NEXUS_REPOSITORY,
-                                credentialsId: NEXUS_CREDENTIALS_ID,
-                                artifacts: [
-                                    [artifactId: pom.artifactId,
-                                    classifier: '',
-                                    file: artifactPath,
-                                    type: pom.packaging]
-                                ]);
-                        }
+                        def jarFile = sh "ls target/*.jar"
+                        nexusArtifactUploader(
+                            nexusVersion: "${NEXUS_VERSION}",
+                            protocol: "${NEXUS_PROTOCOL}",
+                            nexusUrl: "${NEXUS_URL}",
+                            groupId: "org.example",
+                            version: "1.0-SNAPSHOT",
+                            repository: "${NEXUS_REPOSITORY}",
+                            credentialsId: "${NEXUS_CREDENTIALS_ID}",
+                            artifacts: [
+                                [artifactId: "myapp", classifier: '', file: "target/myapp-1.0-SNAPSHOT.jar", type: 'jar'],
+                            ]
+                        )
                     }
                 }
             }

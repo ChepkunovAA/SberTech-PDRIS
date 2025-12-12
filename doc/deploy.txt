@@ -1,0 +1,89 @@
+Started by user admin
+Replayed #2
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/deploy@2
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Download from Nexus)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $NEXUS_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ curl -u admin:**** -o myapp.jar http://nexus:8081/repository/maven-snapshots/org/example/myapp/1.0-SNAPSHOT/myapp-1.0-SNAPSHOT.jar
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  1473    0  1473    0     0  21080      0 --:--:-- --:--:-- --:--:-- 21347
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (git clone)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/ChepkunovAA/SberTech-PDRIS
+ > git init /var/jenkins_home/workspace/deploy@2 # timeout=10
+Fetching upstream changes from https://github.com/ChepkunovAA/SberTech-PDRIS
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/ChepkunovAA/SberTech-PDRIS +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/ChepkunovAA/SberTech-PDRIS # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/lab5-deploy^{commit} # timeout=10
+Checking out Revision 0310a6cfbb865bda2f1b0f5236dba6defd7898db (refs/remotes/origin/lab5-deploy)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 0310a6cfbb865bda2f1b0f5236dba6defd7898db # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git checkout -b lab5-deploy 0310a6cfbb865bda2f1b0f5236dba6defd7898db # timeout=10
+Commit message: "Update Jenkinsfile.deploy"
+ > git rev-list --no-walk 0310a6cfbb865bda2f1b0f5236dba6defd7898db # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run Ansible)
+[Pipeline] sh
++ ansible-playbook ./ansible/playbook.yml
+[WARNING]: No inventory was parsed, only implicit localhost is available
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+PLAY [Deploy Application] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Stop previous instance if running] ***************************************
+[ERROR]: Task failed: Module failed: non-zero return code
+Origin: /var/jenkins_home/workspace/deploy@2/ansible/playbook.yml:11:7
+
+ 9   
+10   tasks:
+11     - name: Stop previous instance if running
+         ^ column 7
+
+fatal: [localhost]: FAILED! => {"changed": true, "cmd": ["pkill", "-f", "java.*myapp.jar"], "delta": "0:00:00.047798", "end": "2025-12-12 00:32:40.454139", "msg": "non-zero return code", "rc": 1, "start": "2025-12-12 00:32:40.406341", "stderr": "", "stderr_lines": [], "stdout": "", "stdout_lines": []}
+...ignoring
+
+TASK [Start application] *******************************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=1   
+
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
