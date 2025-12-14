@@ -1,2 +1,0 @@
-"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Fri Dec 05 23:18:40 MSK 2025","Fri Dec 05 23:18:42 MSK 2025","2544","","org.example.DeepThoughtSolverTest","","org.example.DeepThoughtSolverTest","getAnswerTest","getAnswerTest()",""
