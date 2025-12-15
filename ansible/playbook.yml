@@ -1,0 +1,20 @@
+---
+- name: Deploy Application
+  hosts: localhost
+  connection: local
+  
+  vars:
+    app_name: "myapp"
+    app_port: 8080
+  
+  tasks:
+    - name: Stop previous instance if running
+      command: pkill -f "java.*{{ app_name }}.jar"
+      ignore_errors: yes
+      
+    - name: Start application
+      command: >
+        nohup java -jar {{ app_name }}.jar
+        --server.port={{ app_port }} > app.log 2>&1 &
+      async: 10
+      poll: 0

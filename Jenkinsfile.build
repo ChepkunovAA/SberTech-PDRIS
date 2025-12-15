@@ -1,0 +1,103 @@
+pipeline {
+    agent any
+    
+    tools {
+        jdk 'jdk17'
+        maven 'mvn'
+    }
+    
+    environment {
+        JAVA_HOME = "${tool 'jdk17'}"
+        PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
+
+        NEXUS_URL = "nexus:8081"
+        NEXUS_CREDENTIALS_ID = "nexus_cred"
+        NEXUS_PROTOCOL = "http"
+        NEXUS_REPOSITORY = 'maven-snapshots'
+        NEXUS_VERSION = "nexus3"
+
+        SONAR_HOST = "http://sonarqube:9000"
+        SONAR_CREDENTIALS_ID = 'sonarqube_token'
+    }
+
+    stages {
+        stage('Environment Check') {
+            steps {
+                sh """
+                    echo "Java version:"
+                    java -version
+                    echo "Maven version:"
+                    mvn -version
+                    echo "Current directory:"
+                    pwd
+                    echo "JAVA_HOME: ${JAVA_HOME}"
+                """
+            }
+        }
+        
+        stage('git clone'){
+            steps{
+                git branch: 'lab5-app', url: 'https://github.com/ChepkunovAA/SberTech-PDRIS'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                dir('VeryUsefulApp') {
+                    sh 'mvn test'
+                }
+            }
+        }
+       
+        stage('Generate Allure Report') {
+            steps {
+                dir('VeryUsefulApp') {
+                    allure([
+                        includeProperties: false,
+                        jdk: 'jdk17',
+                        results: [[path: "./target/allure-results"]]
+                    ])
+                }
+            }
+        }
+        
+        stage('SonarQube Analysis') {
+            steps {
+                dir('VeryUsefulApp') {
+                    withCredentials([string(credentialsId: SONAR_CREDENTIALS_ID, variable: 'SONAR_TOKEN')]) {
+                        sh '''
+                            mvn sonar:sonar \
+                                -Dsonar.projectKey=VeryUsefulApp \
+                                -Dsonar.host.url=http://sonarqube:9000 \
+                                -Dsonar.token=$SONAR_TOKEN
+                        '''
+                    }
+                }
+            }
+        }
+
+
+        stage("Publish to Nexus") {
+            steps {
+                dir('VeryUsefulApp') {
+                    script {
+                        sh 'mvn package'
+                        def jarFile = sh "ls target/*.jar"
+                        nexusArtifactUploader(
+                            nexusVersion: "${NEXUS_VERSION}",
+                            protocol: "${NEXUS_PROTOCOL}",
+                            nexusUrl: "${NEXUS_URL}",
+                            groupId: "org.example",
+                            version: "1.0-SNAPSHOT",
+                            repository: "${NEXUS_REPOSITORY}",
+                            credentialsId: "${NEXUS_CREDENTIALS_ID}",
+                            artifacts: [
+                                [artifactId: "myapp", classifier: '', file: "target/myapp-1.0-SNAPSHOT.jar", type: 'jar'],
+                            ]
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
